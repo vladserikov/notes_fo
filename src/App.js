@@ -7,9 +7,9 @@ import Notification from './components/Notification';
 
 const App = () => {
     const [notes, setNotes] = useState([]);
-    const [newNote, setNewNote] = useState('new note...');
+    const [newNote, setNewNote] = useState('');
     const [showAll, setShowAll] = useState(true);
-    const [errorMessage, setErrorMessage] = useState('some error happened')
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const notesToShow = showAll ? notes : notes.filter(note => note.important);
 
@@ -28,7 +28,6 @@ const App = () => {
         event.preventDefault()
         const noteObj = {
             content: newNote,
-            date: new Date().toISOString(),
             important: Math.random() > 0.5,
         }
 
@@ -36,6 +35,12 @@ const App = () => {
             .then(returnNote => {
                 setNotes(notes.concat(returnNote))
                 setNewNote('')
+            })
+            .catch(err => {
+                setErrorMessage(err.message)
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000);
             })
     }
 
